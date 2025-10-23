@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Página Web de Fútbol</title>
+<style>
+body {
+font-family: 'Arial', sans-serif;
+margin: 0;
+padding: 0;
+background-color: #eaeaea;
+}
+header {
+background-color: #0d3b66;
+color: white;
+padding: 20px 0;
+text-align: center;
+}
+header h1 {
+font-size: 3em;
+margin: 0;
+}
+nav {
+background-color: #1a2a6c;
+overflow: hidden;
+text-align: center;
+}
+nav a {
+color: white;
+padding: 14px 20px;
+display: inline-block;
+text-decoration: none;
+font-size: 1.1em;
+}
+nav a:hover {
+background-color: #f3b43b;
+color: black;
+}
+.container {
+padding: 20px;
+display: none;
+}
+.active {
+display: block;
+}
+footer {
+background-color: #0d3b66;
+color: white;
+text-align: center;
+padding: 15px 0;
+font-size: 1em;
+position: relative;
+bottom: 0;
+width: 100%;
+}
+/* Botones y estilos del cuestionario y juego */
+button {
+background-color: #1a2a6c;
+color: white;
+padding: 10px 20px;
+margin-top: 15px;
+border: none;
+cursor: pointer;
+}
+button:hover {
+background-color: #f3b43b;
+color: black;
+}
+input[type="text"] {
+padding: 10px;
+width: 60%;
+margin-top: 10px;
+}
+</style>
+</head>
+<body>
+
+<header>
+<h1>Página Web de Fútbol</h1>
+<p>Todo sobre el mundo del fútbol, noticias, equipos y más.</p>
+</header>
+
+<nav>
+<a href="#" onclick="mostrarSeccion('inicio')">Inicio</a>
+<a href="#" onclick="mostrarSeccion('cuestionario')">Cuestionario</a>
+<a href="#" onclick="mostrarSeccion('juego')">Juego</a>
+</nav>
+
+<!-- 🏠 SECCIÓN INICIO -->
+<div id="inicio" class="container active">
+<h2>Datos sobre el mejor equipo de la historia</h2>
+<p><strong>El FC Barcelona</strong> fue elegido el mejor club del mundo de la década 2011-2020 por la IFFHS.
+La institución azulgrana acumuló 2.877 puntos gracias a títulos como dos Ligas de Campeones y seis Ligas.</p>
+<img src="https://www.fcbarcelona.com/fcbarcelona/photo/2019/03/12/f6fb2213-7646-4b66-a91c-45846ca463eb/abYNnfns.jpg"
+alt="Fútbol Barcelona" style="width:100%; border-radius:10px;">
+</div>
+
+<!-- ⚽ SECCIÓN CUESTIONARIO -->
+<div id="cuestionario" class="container">
+<h2>Cuestionario de Fútbol</h2>
+<form id="quiz">
+<p>1️⃣ ¿Qué país ganó el Mundial 2010?</p>
+<input type="radio" name="q1" value="a"> Brasil<br>
+<input type="radio" name="q1" value="b"> España<br>
+<input type="radio" name="q1" value="c"> Alemania<br>
+
+<p>2️⃣ ¿Quién es conocido como "La Pulga"?</p>
+<input type="radio" name="q2" value="a"> Cristiano Ronaldo<br>
+<input type="radio" name="q2" value="b"> Messi<br>
+<input type="radio" name="q2" value="c"> Neymar<br>
+
+<p>3️⃣ ¿Cuántos jugadores hay en un equipo en el campo?</p>
+<input type="radio" name="q3" value="a"> 9<br>
+<input type="radio" name="q3" value="b"> 10<br>
+<input type="radio" name="q3" value="c"> 11<br>
+
+<br>
+<button type="button" onclick="verificar()">Verificar respuestas</button>
+</form>
+
+<p id="resultado"></p>
+</div>
+
+<!-- 🎮 SECCIÓN JUEGO -->
+<div id="juego" class="container">
+<h2>🎯 Adivina el Jugador</h2>
+<p>💡 Pista: Es argentino, ha jugado en el Barcelona y en el PSG.</p>
+
+<input type="text" id="respuesta" placeholder="Escribe el nombre...">
+<br>
+<button onclick="verificarJugador()">Adivinar</button>
+<p id="mensaje"></p>
+</div>
+
+<footer>
+<p>&copy; 2025 Página Web de Fútbol - Todos los derechos reservados</p>
+</footer>
+
+<script>
+// 🔹 Mostrar sección según el menú
+function mostrarSeccion(id) {
+const secciones = document.querySelectorAll('.container');
+secciones.forEach(sec => sec.classList.remove('active'));
+document.getElementById(id).classList.add('active');
+}
+
+// 🔹 Verificar cuestionario
+function verificar() {
+let correctas = 0;
+const respuestas = { q1: "b", q2: "b", q3: "c" };
+
+for (let i in respuestas) {
+const seleccionada = document.querySelector(`input[name="${i}"]:checked`);
+if (seleccionada && seleccionada.value === respuestas[i]) {
+correctas++;
+}
+}
+
+document.getElementById("resultado").textContent =
+`✅ Has acertado ${correctas} de 3 preguntas.`;
+}
+
+// 🔹 Juego de adivinar jugador
+function verificarJugador() {
+const jugador = document.getElementById("respuesta").value.toLowerCase();
+if (jugador === "messi" || jugador === "lionel messi") {
+document.getElementById("mensaje").textContent = "✅ ¡Correcto! Es Lionel Messi.";
+} else {
+document.getElementById("mensaje").textContent = "❌ Intenta otra vez.";
+}
+}
+</script>
+
+</body>
+</html>
