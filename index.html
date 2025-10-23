@@ -54,7 +54,7 @@ position: relative;
 bottom: 0;
 width: 100%;
 }
-/* Botones y estilos del cuestionario y juego */
+/* Botones y estilos */
 button {
 background-color: #1a2a6c;
 color: white;
@@ -67,10 +67,20 @@ button:hover {
 background-color: #f3b43b;
 color: black;
 }
-input[type="text"] {
-padding: 10px;
+.opcion {
+display: block;
+margin: 8px 0;
+padding: 8px;
+border-radius: 5px;
+cursor: pointer;
+background-color: #fff;
+border: 1px solid #ccc;
 width: 60%;
-margin-top: 10px;
+text-align: left;
+}
+.opcion:hover {
+background-color: #f3b43b;
+color: black;
 }
 </style>
 </head>
@@ -124,13 +134,11 @@ alt="Fútbol Barcelona" style="width:100%; border-radius:10px;">
 
 <!-- 🎮 SECCIÓN JUEGO -->
 <div id="juego" class="container">
-<h2>🎯 Adivina el Jugador</h2>
-<p>💡 Pista: Es argentino, ha jugado en el Barcelona y en el PSG.</p>
-
-<input type="text" id="respuesta" placeholder="Escribe el nombre...">
-<br>
-<button onclick="verificarJugador()">Adivinar</button>
+<h2>🎯 Juego de Fútbol (Opción Múltiple)</h2>
+<p id="pregunta"></p>
+<div id="opciones"></div>
 <p id="mensaje"></p>
+<p id="progreso"></p>
 </div>
 
 <footer>
@@ -143,32 +151,122 @@ function mostrarSeccion(id) {
 const secciones = document.querySelectorAll('.container');
 secciones.forEach(sec => sec.classList.remove('active'));
 document.getElementById(id).classList.add('active');
+
+if (id === 'juego') iniciarJuego();
 }
 
 // 🔹 Verificar cuestionario
 function verificar() {
 let correctas = 0;
 const respuestas = { q1: "b", q2: "b", q3: "c" };
-
 for (let i in respuestas) {
 const seleccionada = document.querySelector(`input[name="${i}"]:checked`);
-if (seleccionada && seleccionada.value === respuestas[i]) {
-correctas++;
+if (seleccionada && seleccionada.value === respuestas[i]) correctas++;
 }
-}
-
 document.getElementById("resultado").textContent =
 `✅ Has acertado ${correctas} de 3 preguntas.`;
 }
 
-// 🔹 Juego de adivinar jugador
-function verificarJugador() {
-const jugador = document.getElementById("respuesta").value.toLowerCase();
-if (jugador === "messi" || jugador === "lionel messi") {
-document.getElementById("mensaje").textContent = "✅ ¡Correcto! Es Lionel Messi.";
-} else {
-document.getElementById("mensaje").textContent = "❌ Intenta otra vez.";
+// 🔹 Juego con preguntas de opción múltiple (nivel medio)
+const preguntas = [
+{ 
+pregunta: "¿Qué jugador argentino ganó el Balón de Oro en 2022?",
+opciones: ["Di María", "Messi", "Martínez"],
+respuesta: "Messi"
+},
+{
+pregunta: "¿Qué país organizó el Mundial 2014?",
+opciones: ["Alemania", "Brasil", "Rusia"],
+respuesta: "Brasil"
+},
+{
+pregunta: "¿Qué selección perdió la final del Mundial 2014 contra Alemania?",
+opciones: ["Argentina", "Francia", "Italia"],
+respuesta: "Argentina"
+},
+{
+pregunta: "¿Qué equipo ganó la Champions League 2021?",
+opciones: ["Chelsea", "Manchester City", "Real Madrid"],
+respuesta: "Chelsea"
+},
+{
+pregunta: "¿Qué jugador es apodado 'El Bicho'?",
+opciones: ["Cristiano Ronaldo", "Benzema", "Mbappé"],
+respuesta: "Cristiano Ronaldo"
+},
+{
+pregunta: "¿En qué país juega actualmente el club Al Nassr?",
+opciones: ["Arabia Saudita", "Qatar", "Emiratos Árabes"],
+respuesta: "Arabia Saudita"
+},
+{
+pregunta: "¿Qué jugador brasileño usó el número 10 en el Mundial 2002?",
+opciones: ["Ronaldinho", "Rivaldo", "Kaká"],
+respuesta: "Ronaldinho"
+},
+{
+pregunta: "¿Qué selección ganó la Copa América 2021?",
+opciones: ["Brasil", "Argentina", "Uruguay"],
+respuesta: "Argentina"
+},
+{
+pregunta: "¿En qué club jugó Zlatan Ibrahimović antes de retirarse?",
+opciones: ["PSG", "Milan", "Ajax"],
+respuesta: "Milan"
+},
+{
+pregunta: "¿Qué jugador uruguayo es conocido como 'El Pistolero'?",
+opciones: ["Cavani", "Luis Suárez", "Forlán"],
+respuesta: "Luis Suárez"
 }
+];
+
+let indice = 0;
+let aciertos = 0;
+
+function iniciarJuego() {
+indice = 0;
+aciertos = 0;
+document.getElementById("mensaje").textContent = "";
+document.getElementById("progreso").textContent = "";
+mostrarPregunta();
+}
+
+function mostrarPregunta() {
+const contenedor = document.getElementById("opciones");
+contenedor.innerHTML = "";
+
+if (indice < preguntas.length) {
+let q = preguntas[indice];
+document.getElementById("pregunta").textContent = `❓ Pregunta ${indice + 1}: ${q.pregunta}`;
+q.opciones.forEach(opcion => {
+let btn = document.createElement("button");
+btn.textContent = opcion;
+btn.className = "opcion";
+btn.onclick = () => verificarRespuesta(opcion);
+contenedor.appendChild(btn);
+});
+document.getElementById("progreso").textContent = `Progreso: ${indice}/10`;
+} else {
+document.getElementById("pregunta").textContent = "🏆 ¡Juego terminado!";
+document.getElementById("mensaje").textContent = `Has acertado ${aciertos} de 10 preguntas.`;
+document.getElementById("progreso").textContent = "";
+}
+}
+
+function verificarRespuesta(opcion) {
+const correcta = preguntas[indice].respuesta;
+if (opcion === correcta) {
+document.getElementById("mensaje").textContent = "✅ ¡Correcto!";
+aciertos++;
+} else {
+document.getElementById("mensaje").textContent = `❌ Incorrecto. Era: ${correcta}.`;
+}
+indice++;
+setTimeout(() => {
+document.getElementById("mensaje").textContent = "";
+mostrarPregunta();
+}, 1500);
 }
 </script>
 
